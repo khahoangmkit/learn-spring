@@ -1,10 +1,12 @@
 package com.example.learn_spring.controller;
 
 import com.example.learn_spring.dto.request.UserCreateRequest;
+import com.example.learn_spring.dto.response.ApiResponse;
 import com.example.learn_spring.dto.response.UserResponse;
 import com.example.learn_spring.entity.User;
 import com.example.learn_spring.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +36,12 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Create a new user")
-    public ResponseEntity<User> createUser(@RequestBody UserCreateRequest user) {
-        User savedUser = userService.saveUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest user) {
+        UserResponse savedUser = userService.createUser(user);
+        return ApiResponse.<UserResponse>builder()
+                .code(1000)
+                .message("Create user success!")
+                .data(savedUser).build();
     }
 
     @PutMapping("/{id}")
