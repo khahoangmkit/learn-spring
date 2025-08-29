@@ -1,5 +1,6 @@
 package com.example.learn_spring.controller;
 
+import com.example.learn_spring.dto.request.UpdateUserRequest;
 import com.example.learn_spring.dto.request.UserCreateRequest;
 import com.example.learn_spring.dto.response.ApiResponse;
 import com.example.learn_spring.dto.response.UserResponse;
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest userDetails) {
         try {
             UserResponse updatedUser = userService.updateUser(id, userDetails);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);

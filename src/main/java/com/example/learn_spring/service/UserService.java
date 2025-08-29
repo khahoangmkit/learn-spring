@@ -1,21 +1,21 @@
 package com.example.learn_spring.service;
 
+import com.example.learn_spring.dto.request.UpdateUserRequest;
 import com.example.learn_spring.dto.request.UserCreateRequest;
-import com.example.learn_spring.dto.response.ApiResponse;
 import com.example.learn_spring.dto.response.UserResponse;
 import com.example.learn_spring.entity.User;
 import com.example.learn_spring.exception.AppException;
 import com.example.learn_spring.exception.ErrorCode;
 import com.example.learn_spring.mapper.UserMapper;
 import com.example.learn_spring.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -46,14 +46,11 @@ public class UserService {
         return userMapper.toUserResponse(newUser);
     }
 
-    public UserResponse updateUser(Long id, User userDetails) {
+    public UserResponse updateUser(Long id, UpdateUserRequest userDetails) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         
-        user.setFullName(userDetails.getFullName());
-        user.setPhone(userDetails.getPhone());
-        user.setEmail(userDetails.getEmail());
-        user.setAddress(userDetails.getAddress());
+        userMapper.updateUser(user, userDetails);
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
