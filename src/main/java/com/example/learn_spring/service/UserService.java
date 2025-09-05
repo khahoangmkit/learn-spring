@@ -9,6 +9,9 @@ import com.example.learn_spring.exception.ErrorCode;
 import com.example.learn_spring.mapper.UserMapper;
 import com.example.learn_spring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +45,10 @@ public class UserService {
             throw new AppException(ErrorCode.USER_EXISTS);
         }
         User newUser = userMapper.toUser(user);
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userRepository.save(newUser);
         return userMapper.toUserResponse(newUser);
     }
